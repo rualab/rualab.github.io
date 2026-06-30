@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruâ — Estudio de Arte y Diseño</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+</head>
+
+<body>
+
+  <div class="landing site-blur" id="landing">
+    <canvas id="shader-canvas"></canvas>
+    <div class="landing-content">
+      <img src="img/rua_logo.png" alt="Ruâ" class="landing-logo">
+      <!--<p class="landing-sub">Estudio de Arte y Diseño</p>-->
+    </div>
+    <button class="landing-scroll" id="landing-scroll">
+      <span>trabajo</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 3v10M3 8l5 5 5-5" stroke="currentColor" stroke-width="0.75"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="menu-overlay" id="menu-overlay">
+<button class="menu-close" id="menu-close" aria-label="Cerrar menú">✕</button>
+    <nav class="menu-nav">
+      <a href="#projects">Trabajo</a>
+      <a href="#about">Estudio</a>
+    </nav>
+    <div class="menu-meta">
+      <p>Rodrigo Ramírez Velasco</p>
+      <p>rua.lab.mx@gmail.com</p>
+      <p>Ciudad de México</p>
+    </div>
+  </div>
+
+  <div class="layout site-blur" id="layout">
+    <div class="col-left" id="col-left">
+
+      <div class="col-header"> 
+
+        <a href="#" id="logo-home">
+          <img src="img/rua_logo2.png" alt="Ruâ" class="header-logo-img">
+        </a>
+      </div>
+
+      <div id="projects">
+
+        <div class="project-entry" data-project="sight-sound">
+          <div class="entry-content">
+            <span class="entry-index">01</span>
+            <h2 class="entry-title">SIGHT + SOUND</h2>
+            <p class="entry-client">Festival International d'art Numérique<br>Eastern Bloc — Montréal, 2024</p>
+            <p class="entry-desc">Identidad visual y sistema gráfico para la 12ª edición. Diseño generativo que se adapta a todos los formatos: campaña, web, motion, merch, señalética.</p>
+            <ul class="entry-tags">
+              <li>Identidad Visual</li><li>Diseño Generativo</li>
+              <li>Dirección de Arte</li><li>Front-end</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-entry" data-project="jazzuv-festival">
+          <div class="entry-content">
+            <span class="entry-index">02</span>
+            <h2 class="entry-title">10° Festival Internacional JazzUV</h2>
+            <p class="entry-client">Universidad Veracruzana — Xalapa, 2024</p>
+            <p class="entry-desc">Sistema de identidad para el festival de jazz de la UV. Ilustración digital y diseño generativo para carteles, boletos, motion graphics y señalética.</p>
+            <ul class="entry-tags">
+              <li>Identidad Visual</li><li>Ilustración</li><li>Motion Graphics</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-entry" data-project="milieux">
+          <div class="entry-content">
+            <span class="entry-index">03</span>
+            <h2 class="entry-title">Milieux Institute</h2>
+            <p class="entry-client">Concordia University — Montréal, 2020</p>
+            <p class="entry-desc">Reporte anual 2019–2020, impreso y web. Concepto gráfico inspirado en la Bauhaus con visualizaciones de datos generativas. Dirección editorial y desarrollo front-end.</p>
+            <ul class="entry-tags">
+              <li>Diseño Editorial</li><li>Front-end</li><li>Visualización de Datos</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-entry" data-project="jazzuv-centro">
+          <div class="entry-content">
+            <span class="entry-index">04</span>
+            <h2 class="entry-title">Centro de Estudios <br> de Jazz</h2>
+            <p class="entry-client">JazzUV, Universidad Veracruzana — Xalapa, 2024</p>
+            <p class="entry-desc">Sistema de identidad institucional. Sistema visual flexible para comunicación digital y física.</p>
+            <ul class="entry-tags">
+              <li>Identidad Visual</li><li>Diseño Generativo</li><li>Dirección de Arte</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-entry" data-project="moodlemoot">
+  <div class="entry-content">
+    <span class="entry-index">05</span>
+    <h2 class="entry-title">MoodleMoot <br> Costa Rica 2026</h2>
+    <p class="entry-client">Emprove — Universidad Nacional, Costa Rica, 2026</p>
+    <p class="entry-desc">Identidad visual para el encuentro regional de la comunidad Moodle. El sistema gráfico reinterpreta los patrones de la carreta costarricense como analogía del aprendizaje en red: simétrico, vibrante y en expansión.</p>
+    <ul class="entry-tags">
+      <li>Identidad Visual</li><li>Desarrollo Web</li><li>Dirección de Arte</li>
+    </ul>
+  </div>
+</div>
+
+        <div class="project-entry about-entry" data-project="about" id="about">
+          <div class="entry-content">
+            <span class="entry-index">—</span>
+            <h2 class="entry-title">Estudio</h2>
+            <p class="entry-desc">Ruâ es un estudio independiente de arte y diseño en la Ciudad de México. Trabajamos con instituciones culturales, festivales y organizaciones que necesitan sistemas visuales coherentes, adaptables y conceptualmente sólidos.</p>
+            <p class="entry-desc">Nuestra práctica cruza el diseño gráfico con la programación creativa: identidades que funcionan en impreso, pantalla, movimiento y espacio.</p>
+            <div id="contact">
+              <a href="mailto:rua.lab.mx@gmail.com" class="contact-link">rua.lab.mx@gmail.com ↗</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+    </div>
+
+    <div class="col-right" id="col-right">
+      <div class="image-panel active" data-panel="sight-sound">
+        <img class="img-fill" src="img/a_sight-plus-sound.png" alt="SIGHT + SOUND">
+      </div>
+      <div class="image-panel" data-panel="jazzuv-festival">
+      <img class="img-fill" src="img/b_festival-internacional-uv.png" alt="Festival Internacional JazzUV">
+      </div>
+<div class="image-panel" data-panel="milieux">
+  <img class="img-fill" src="img/c_milieux-2019-2020.png" alt="Milieux Institute">
+</div>
+<div class="image-panel" data-panel="jazzuv-centro">
+  <img class="img-fill" src="img/d_jazzuv-identidad.png" alt="Centro de Estudios de Jazz">
+</div>
+      <div class="image-panel" data-panel="moodlemoot">
+  <img class="img-fill" src="img/e_moodlemoot26.png" alt="Moodle Moot Costa Rica 2026">
+      </div>
+      <div class="image-panel" data-panel="about">
+  <img class="img-fill" src="img/1-a_rua.png" alt="Ruâ">
+      </div>
+    </div>
+
+  </div>
+
+  <button class="menu-trigger" id="menu-trigger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+
+  <script src="shader.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
