@@ -44,26 +44,17 @@ button { font-family: var(--font); cursor: none; }
   transition: width 0.2s, height 0.2s, background 0.2s, border 0.2s;
 }
 .cursor.expanded {
-  color: #ffffff;
-  position: fixed;
   width: 12px; height: 12px;
   background: #000;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s, border 0.2s;
 }
 
 /* ── LANDING ─────────────────────────────────────────── */
-
 .landing {
   position: fixed; inset: 0; z-index: 200;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transition: opacity 0.8s ease, visibility 0.8s ease;
 }
-
 .landing.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
 #shader-canvas {
@@ -72,7 +63,6 @@ button { font-family: var(--font); cursor: none; }
   display: block;
 }
 
-
 .landing-content {
   position: relative; z-index: 2;
   text-align: center;
@@ -80,11 +70,6 @@ button { font-family: var(--font); cursor: none; }
   align-items: center; gap: 16px;
 }
 .landing-logo { width: clamp(120px, 20vw, 220px); height: auto; }
-.landing-logo-placeholder {
-  font-size: clamp(64px, 10vw, 120px);
-  font-weight: 300; letter-spacing: -0.03em;
-  color: #fff; line-height: 1;
-}
 .landing-sub {
   font-size: 12px; color: rgba(255,255,255,0.4);
   letter-spacing: 0.12em; text-transform: uppercase;
@@ -169,7 +154,7 @@ body.menu-open .menu-trigger span:nth-child(3) {
   max-height: calc(100vh - 24px);
   overflow-y: auto;
   background: #F7F6F3;
-  z-index: 300;
+  z-index: 450;
   padding: 72px 32px 36px;
   display: flex; flex-direction: column;
   border-radius: 16px;
@@ -205,15 +190,13 @@ body.menu-open .menu-trigger span:nth-child(3) {
 .menu-meta { display: flex; flex-direction: column; gap: 4px; padding-top: 24px; }
 .menu-meta p { font-size: 12px; color: var(--muted); }
 
-/* ── LAYOUT ──────────────────────────────────────────── */
-
+/* ── LAYOUT — DESKTOP ────────────────────────────────── */
 .layout {
   position: relative; height: 100vh; width: 100%;
   opacity: 0; transition: opacity 0.6s ease;
 }
 .layout.visible { opacity: 1; }
 
-/* ── COLUMNA DERECHA ─────────────────────────────────── */
 .col-right {
   position: absolute; inset: 0;
   overflow: hidden;
@@ -230,40 +213,28 @@ body.menu-open .menu-trigger span:nth-child(3) {
   width: 100%; height: 100%; object-fit: cover;
 }
 
-/* ── COLUMNA IZQUIERDA — scroll-snap ─────────────────── */
-
 .col-left {
   position: absolute; top: 0; left: 0; bottom: 0;
   width: 420px; height: 100%;
   overflow-y: scroll; z-index: 10;
   scrollbar-width: none; -ms-overflow-style: none;
 }
-
 .col-left::-webkit-scrollbar { width: 0; }
 
-/* ── HEADER ──────────────────────────────────────────── */
 .col-header {
   position: sticky; top: 0; z-index: 20;
   display: flex; align-items: center;
   padding: 20px 28px;
 }
+.header-logo-img { height: 33px; width: auto; }
 
-.header-logo-img {
-  height: 33px;
-  width: auto;
-}
-
-/* ── TARJETAS ────────────────────────────────────────── */
 .project-entry {
   height: 100vh;
   display: flex; align-items: flex-end;
   padding: 0 24px 40px 24px;
   position: relative;
-  /* sin scroll-snap-align */
 }
-.about-entry {
-  min-height: 100vh; height: auto;
-}
+.about-entry { min-height: 100vh; height: auto; }
 
 .entry-content {
   width: 100%;
@@ -272,12 +243,9 @@ body.menu-open .menu-trigger span:nth-child(3) {
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
   padding: 28px 28px 24px;
   border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: flex; flex-direction: column; gap: 14px;
   box-shadow: 0 8px 40px rgba(0,0,0,0.12);
-  opacity: 0.5;
-  filter: blur(1.5px);
+  opacity: 0.5; filter: blur(1.5px);
   transform: translateY(8px);
   transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
   cursor: pointer;
@@ -337,61 +305,45 @@ body.menu-open .grain-overlay { opacity: 1; }
   100% { background-position: 15% -35%; }
 }
 
-/* ── RESPONSIVE ──────────────────────────────────────── */
-
-/* Tablet: 768px - 1024px */
+/* ── TABLET ──────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .col-left { width: 360px; }
   .entry-title { font-size: clamp(20px, 2.5vw, 28px); }
 }
 
-/* Móvil: hasta 768px */
+/* ── MÓVIL ───────────────────────────────────────────── */
 @media (max-width: 768px) {
 
-  /* Sin cursor custom en touch */
-  html, body { cursor: auto; }
+  html, body {
+    cursor: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+  }
+
   .cursor { display: none; }
   button { cursor: auto; }
   a { cursor: auto; }
 
-  /* Body scroll normal en móvil */
-  html, body {
-    overflow: auto;
-    height: auto;
-  }
-
-  /* Landing ocupa toda la pantalla */
+  /* Landing fullscreen */
   .landing {
     position: relative;
     height: 100svh;
-    min-height: 100svh;
+    min-height: -webkit-fill-available;
   }
 
-  /* Layout stacked — imagen arriba, tarjeta abajo */
+  /* Layout: columna normal, sin absolute */
   .layout {
+    position: relative;
     height: auto;
     opacity: 1;
-    display: flex;
-    flex-direction: column;
   }
 
-  /* Imagen hero: full width arriba */
-  .col-right {
-    position: relative;
-    width: 100%;
-    height: 60vw;
-    min-height: 240px;
-    max-height: 420px;
-    inset: auto;
-    z-index: 1;
-  }
+  /* col-right oculta en móvil — las imgs van dentro de cada sección */
+  .col-right { display: none; }
 
-  /* Solo la imagen activa se ve */
-  .image-panel { display: none; }
-  .image-panel.active { display: block; position: relative; height: 100%; }
-  .img-fill { position: absolute; }
-
-  /* Columna izquierda: full width, scroll normal */
+  /* col-left full width scroll normal */
   .col-left {
     position: relative;
     width: 100%;
@@ -400,30 +352,72 @@ body.menu-open .grain-overlay { opacity: 1; }
     top: auto; left: auto; bottom: auto;
   }
 
-  /* Cada tarjeta: altura auto, no 100vh */
+  /* Cada sección tiene su propia imagen de fondo */
   .project-entry {
+    position: relative;
     height: auto;
-    min-height: 0;
-    padding: 16px 16px 24px;
-    align-items: flex-start;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 16px 24px;
+    overflow: hidden;
   }
 
-  .about-entry {
-    min-height: 0;
+  /* Imagen de fondo por sección via data attribute */
+  .project-entry::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
   }
 
-  /* Tarjeta siempre visible en móvil */
+  .project-entry[data-project="sight-sound"]::before {
+    background-image: url('img/a_sight-plus-sound.png');
+  }
+  .project-entry[data-project="jazzuv-festival"]::before {
+    background-image: url('img/b_festival-internacional-uv.png');
+  }
+  .project-entry[data-project="milieux"]::before {
+    background-image: url('img/c_milieux-2019-2020.png');
+  }
+  .project-entry[data-project="jazzuv-centro"]::before {
+    background-image: url('img/d_jazzuv-identidad.png');
+  }
+  .project-entry[data-project="moodlemoot"]::before {
+    background-image: url('img/e_moodlemoot26.png');
+  }
+  .project-entry[data-project="about"]::before {
+    background-image: url('img/1-a_rua.png');
+  }
+
+  /* Tarjeta siempre visible, z-index sobre imagen */
   .entry-content {
+    position: relative;
+    z-index: 2;
     opacity: 1;
     filter: none;
     transform: none;
+    margin-top: auto;
+  }
+
+  .about-entry {
+    min-height: auto;
+    height: auto;
   }
 
   /* Header */
-  .col-header { padding: 16px 16px; }
+  .col-header {
+    position: sticky; top: 0; z-index: 20;
+    padding: 16px;
+    background: transparent;
+  }
   .header-logo-img { height: 26px; }
 
-  /* Progress bar oculta en móvil */
+  /* Progress bar oculta */
   .progress-bar { display: none; }
 
   /* Menú */
@@ -433,12 +427,9 @@ body.menu-open .grain-overlay { opacity: 1; }
   }
   .menu-nav a { font-size: clamp(28px, 8vw, 40px); }
   .menu-trigger { top: 14px; right: 16px; }
-
-  /* Landing scroll button */
   .landing-scroll { bottom: 24px; }
 }
 
-/* Pantallas muy pequeñas */
 @media (max-width: 375px) {
   .entry-title { font-size: 20px; }
   .entry-desc, .entry-client { font-size: 12px; }

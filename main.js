@@ -12,15 +12,15 @@ const imagePanels    = document.querySelectorAll('.image-panel');
 const projectEntries = document.querySelectorAll('.project-entry');
 const entriesArr     = Array.from(projectEntries);
 
-/* ── DETECCIÓN DE TOUCH / MÓVIL ───────────────────────── */
-const isTouch = () => window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+/* ── DETECCIÓN DE MÓVIL ───────────────────────────────── */
+const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
 /* ── GRAIN ────────────────────────────────────────────── */
 const grain = document.createElement('div');
 grain.className = 'grain-overlay';
 document.body.appendChild(grain);
 
-/* ── BLUR SINEWAVE (60s período) ──────────────────────── */
+/* ── BLUR SINEWAVE ────────────────────────────────────── */
 const BLUR_MIN = 5, BLUR_MAX = 10, BLUR_PERIOD = 60;
 let blurRaf = null, blurPhase = 0, blurLastTs = null, blurActive = false;
 
@@ -61,7 +61,7 @@ function enterSite() {
   if (siteVisible) return;
   siteVisible = true;
   landing.classList.add('hidden');
-  if (!isTouch()) layout.classList.add('visible');
+  layout.classList.add('visible');
   setTimeout(() => { if (window.shaderPause) window.shaderPause(); }, 900);
 }
 
@@ -69,12 +69,14 @@ function returnToLanding() {
   siteVisible = false;
   layout.classList.remove('visible');
   landing.classList.remove('hidden');
-  if (!isTouch()) colLeft.scrollTo({ top: 0, behavior: 'instant' });
+  if (!isMobile()) colLeft.scrollTo({ top: 0, behavior: 'instant' });
+  else window.scrollTo({ top: 0, behavior: 'instant' });
   if (window.shaderResume) window.shaderResume();
 }
 
 landingScroll.addEventListener('click', enterSite);
 landing.addEventListener('wheel', e => { if (e.deltaY > 0) enterSite(); });
+landing.addEventListener('touchstart', () => {}, { passive: true });
 landing.addEventListener('touchmove', () => enterSite(), { passive: true });
 
 logoHome.addEventListener('click', e => {
@@ -82,41 +84,48 @@ logoHome.addEventListener('click', e => {
   returnToLanding();
 });
 
-/* ── SCROLL AL TOP → REGRESA AL LANDING (solo desktop) ── */
+/* ── SCROLL AL TOP → REGRESA AL LANDING ───────────────── */
 let lastScrollTop = 0;
-colLeft.addEventListener('scroll', () => {
-  const st = colLeft.scrollTop;
-  const max = colLeft.scrollHeight - colLeft.clientHeight;
-  progressFill.style.height = max > 0 ? `${(st / max) * 100}%` : '0%';
 
-  if (!isTouch() && st === 0 && lastScrollTop > 0 && siteVisible) {
+function handleScroll() {
+  const scrollEl = isMobile() ? document.documentElement : colLeft;
+  const st = isMobile() ? window.scrollY : colLeft.scrollTop;
+  const max = isMobile()
+    ? document.documentElement.scrollHeight - window.innerHeight
+    : colLeft.scrollHeight - colLeft.clientHeight;
+
+  if (progressFill) {
+    progressFill.style.height = max > 0 ? `${(st / max) * 100}%` : '0%';
+  }
+
+  if (st === 0 && lastScrollTop > 0 && siteVisible) {
     returnToLanding();
   }
   lastScrollTop = st;
-}, { passive: true });
+}
+
+colLeft.addEventListener('scroll', handleScroll, { passive: true });
+window.addEventListener('scroll', () => { if (isMobile()) handleScroll(); }, { passive: true });
 
 /* ── SCROLL DERECHA → IZQUIERDA (solo desktop) ────────── */
 colRight.addEventListener('wheel', e => {
-  if (isTouch()) return;
+  if (isMobile()) return;
   e.preventDefault();
   colLeft.scrollBy({ top: e.deltaY });
 }, { passive: false });
 
-/* ── INTERSECTION OBSERVER — activa imagen + tarjeta ──── */
+/* ── INTERSECTION OBSERVER ────────────────────────────── */
 function activate(projectId) {
   imagePanels.forEach(p => p.classList.toggle('active', p.dataset.panel === projectId));
   projectEntries.forEach(e => e.classList.toggle('active', e.dataset.project === projectId));
 }
 
-// En móvil el root es null (viewport), en desktop es colLeft
-function getObserverRoot() {
-  return isTouch() ? null : colLeft;
-}
-
+// Desktop: root = colLeft. Móvil: root = null (viewport)
+const observerRoot = isMobile() ? null : colLeft;
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) activate(e.target.dataset.project); });
 }, {
-  root: getObserverRoot(),
+  root: observerRoot,
   rootMargin: '-40% 0px -40% 0px',
   threshold: 0
 });
@@ -128,7 +137,7 @@ if (projectEntries[0]) activate(projectEntries[0].dataset.project);
 function openMenu() {
   menuOverlay.classList.add('open');
   document.body.classList.add('menu-open');
-  if (!isTouch()) startBlurLoop();
+  if (!isMobile()) startBlurLoop();
 }
 function closeMenu() {
   menuOverlay.classList.remove('open');
@@ -165,7 +174,7 @@ const cursor = document.createElement('div');
 cursor.className = 'cursor';
 document.body.appendChild(cursor);
 
-if (!isTouch()) {
+if (!isMobile()) {
   document.addEventListener('mousemove', e => {
     cursor.style.left = `${e.clientX}px`;
     cursor.style.top  = `${e.clientY}px`;
@@ -180,7 +189,7 @@ if (!isTouch()) {
 
 /* ── TECLADO ↑↓ (solo desktop) ───────────────────────── */
 document.addEventListener('keydown', e => {
-  if (isTouch()) return;
+  if (isMobile()) return;
   if (e.metaKey || e.ctrlKey) return;
   if (!siteVisible || menuOverlay.classList.contains('open')) return;
   const cur = entriesArr.findIndex(el => {
@@ -233,16 +242,16 @@ const PROJECTS = {
   'moodlemoot': {
     title: 'MoodleMoot Costa Rica 2026',
     client: 'Emprove \u2014 Universidad Nacional', year: '2026', location: 'Costa Rica',
-    tags: ['Identidad Visual', 'Dise\u00f1o Editorial', 'Web'],
-    hero: 'img/e_moodlemoot-cr-2026.png', images: [],
+    tags: ['Identidad Visual', 'Desarrollo Web', 'Direcci\u00f3n de Arte'],
+    hero: 'img/e_moodlemoot26.png', images: [],
     body: `<p>Identidad visual para el encuentro regional de la comunidad Moodle.</p>`
-  },
+  }
 };
 
 /* ── CLICK EN TARJETA → PÁGINA ────────────────────────── */
 projectEntries.forEach(entry => {
   entry.addEventListener('click', () => {
-    if (!entry.classList.contains('active')) return;
+    if (!entry.classList.contains('active') && !isMobile()) return;
     const urls = {
       'sight-sound':    'projects/sight-plus-sound.html',
       'jazzuv-festival':'projects/festival-internacional-jazz-24.html',
@@ -254,7 +263,7 @@ projectEntries.forEach(entry => {
   });
 });
 
-/* ── SCROLL AL HASH DE LA URL AL CARGAR ───────────────── */
+/* ── HASH EN URL ──────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
   const hash = window.location.hash.replace('#', '');
   if (hash) {
