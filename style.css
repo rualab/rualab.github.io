@@ -29,6 +29,8 @@ html, body {
   cursor: none;
 }
 
+/*_*/
+
 a { color: inherit; text-decoration: none; }
 button { font-family: var(--font); cursor: none; }
 
