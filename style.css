@@ -199,8 +199,7 @@ body.menu-open .menu-trigger span:nth-child(3) {
 
 .col-right {
   position: absolute; inset: 0;
-  overflow: hidden;
-  z-index: 1;
+  overflow: hidden; z-index: 1;
 }
 .image-panel {
   position: absolute; inset: 0;
@@ -320,6 +319,7 @@ body.menu-open .grain-overlay { opacity: 1; }
     overflow-y: auto;
     height: auto;
     min-height: 100%;
+    background: #0F0805;
   }
 
   .cursor { display: none; }
@@ -331,19 +331,32 @@ body.menu-open .grain-overlay { opacity: 1; }
     position: relative;
     height: 100svh;
     min-height: -webkit-fill-available;
+    /* sin transition en móvil para que no deje negro */
+    transition: none;
   }
 
-  /* Layout: columna normal, sin absolute */
+  /* El shader sigue corriendo detrás del contenido */
+  #shader-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: -1;
+  }
+
+  /* Layout sin fade, visible de inmediato */
   .layout {
     position: relative;
     height: auto;
     opacity: 1;
+    transition: none;
+    background: transparent;
   }
 
-  /* col-right oculta en móvil — las imgs van dentro de cada sección */
+  /* col-right oculta — imgs van directo en cada sección */
   .col-right { display: none; }
 
-  /* col-left full width scroll normal */
+  /* col-left full width */
   .col-left {
     position: relative;
     width: 100%;
@@ -352,10 +365,10 @@ body.menu-open .grain-overlay { opacity: 1; }
     top: auto; left: auto; bottom: auto;
   }
 
-  /* Cada sección tiene su propia imagen de fondo */
+  /* Cada sección fullscreen con imagen de fondo */
   .project-entry {
     position: relative;
-    height: auto;
+    height: 100svh;
     min-height: 100svh;
     display: flex;
     flex-direction: column;
@@ -364,7 +377,7 @@ body.menu-open .grain-overlay { opacity: 1; }
     overflow: hidden;
   }
 
-  /* Imagen de fondo por sección via data attribute */
+  /* Imagen de fondo por sección */
   .project-entry::before {
     content: '';
     position: absolute;
@@ -394,22 +407,37 @@ body.menu-open .grain-overlay { opacity: 1; }
     background-image: url('img/1-a_rua.png');
   }
 
-  /* Tarjeta siempre visible, z-index sobre imagen */
+  /* about igual que las demás */
+  .about-entry {
+    height: 100svh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 16px 24px;
+    overflow: hidden;
+  }
+
+  /* Tarjeta sobre la imagen */
   .entry-content {
     position: relative;
     z-index: 2;
     opacity: 1;
     filter: none;
     transform: none;
+    transition: none;
     margin-top: auto;
   }
 
-  .about-entry {
-    min-height: auto;
-    height: auto;
+  .about-entry .entry-content {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+    filter: none;
+    transform: none;
   }
 
-  /* Header */
+  /* Header sticky transparente */
   .col-header {
     position: sticky; top: 0; z-index: 20;
     padding: 16px;
@@ -417,7 +445,6 @@ body.menu-open .grain-overlay { opacity: 1; }
   }
   .header-logo-img { height: 26px; }
 
-  /* Progress bar oculta */
   .progress-bar { display: none; }
 
   /* Menú */
