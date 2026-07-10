@@ -1,97 +1,61 @@
-# Ruâ — Estudio de Arte y Diseño
+# Ruâ — Art & Design Studio
 
-Portfolio web con layout de dos columnas con scroll independiente.
+**Portfolio site with a WebGL/GLSL landing, two-column navigation, and scroll-driven transitions.**
 
-## Archivos
+[rua.studio](https://rua.studio) · Mexico City
+
+---
+
+## About this project
+
+Built from scratch in **vanilla HTML / CSS / JS** — no frameworks, no build tools. Every interaction, shader, and transition is hand-written. The site doubles as the studio's portfolio and a piece of technical exploration: the landing runs a **GLSL caustics shader rendered in WebGL**, and the project navigation is inspired by the phi.ca menu pattern, rebuilt with `IntersectionObserver` to sync scroll position with panel switching.
+
+No external rendering dependencies — the shader, layout, and interactions all run on raw WebGL and JS.
+
+## Technical highlights
+
+**Landing — GLSL caustics shader**
+A caustics-like light pattern generated in real time in the fragment shader, no textures or video involved — it's procedural math running on the GPU via WebGL.
+
+**Two-column, scroll-driven navigation**
+Fixed left column with a project index, right column with independent scroll. The active panel switch is triggered by `IntersectionObserver`, no external scroll libraries.
+
+**Zero build step**
+The entire site runs by opening `index.html` directly — zero config, zero npm dependencies for production.
+
+## Stack
+
+- **WebGL + GLSL** — caustics shader on the landing
+- **Vanilla JavaScript** — interactions, keyboard nav, `IntersectionObserver`
+- **CSS** — two-column layout, responsive design
+- No frameworks, no build tools
+
+## Structure
 
 ```
 rua-studio/
-├── index.html   ← estructura y contenido
-├── style.css    ← diseño y layout
-├── main.js      ← interacciones (cambio de paneles, teclado)
-└── README.md    ← este archivo
+├── index.html   ← structure and content
+├── style.css    ← design and layout
+├── main.js      ← WebGL shader, interactions, keyboard navigation
+└── img/         ← visual assets for each project
 ```
 
-## Cómo verlo localmente
+## Running it locally
 
-No necesitas Node ni nada instalado. Solo abres `index.html` en tu navegador.
-
-Si quieres un servidor local (recomendado para evitar problemas con rutas de imágenes), tienes dos opciones:
-
-**Opción A — VS Code (la más fácil):**
-1. Instala la extensión "Live Server" en VS Code
-2. Click derecho en `index.html` → "Open with Live Server"
-
-**Opción B — Python (si ya lo tienes):**
 ```bash
 cd rua-studio
 python3 -m http.server 8000
-# Abre http://localhost:8000 en tu navegador
+# open http://localhost:8000
 ```
 
-## Cómo agregar un proyecto
+Or just open `index.html` in the browser — no install required.
 
-1. En `index.html`, añade un `<li>` en la lista `.project-nav`:
-```html
-<li>
-  <button class="project-btn" data-project="mi-proyecto">
-    <span class="proj-index">06</span>
-    <span class="proj-info">
-      <span class="proj-name">Nombre del proyecto</span>
-      <span class="proj-meta">Tipo — Año</span>
-    </span>
-  </button>
-</li>
-```
+## About Ruâ
 
-2. Añade el panel correspondiente dentro de `.col-right`:
-```html
-<div class="project-panel" data-panel="mi-proyecto">
-  <div class="panel-images">
-    <img src="img/mi-proyecto-1.jpg" alt="...">
-    <img src="img/mi-proyecto-2.jpg" alt="...">
-  </div>
-  <div class="panel-text">
-    <h2>Nombre del proyecto</h2>
-    <p class="panel-subtitle">Cliente — Ciudad, Año</p>
-    <p class="panel-desc">Descripción del proyecto.</p>
-    <ul class="panel-tags">
-      <li>Tag 1</li>
-      <li>Tag 2</li>
-    </ul>
-  </div>
-</div>
-```
+Ruâ is an independent art and design studio based in Mexico City, working at the intersection of graphic design, creative programming, and audiovisual art. The studio's work spans visual identity systems for cultural institutions and festivals, with clients including Eastern Bloc (Montréal), Universidad Veracruzana, Concordia University / Milieux Institute, and TOPO Montréal.
 
-El `data-project` del botón y el `data-panel` del panel deben ser **el mismo ID**.
+Its founder also works as an audiovisual artist under the name **ocsalev** — live coding, generative visuals, and live synthesis — which is why the code behind this site isn't just functional, but an extension of that practice: hand-written shaders, generative systems, and interaction treated as design material.
 
-## Cómo reemplazar los placeholders de imagen
+---
 
-Cambia los `<div class="img-placeholder">` por etiquetas `<img>`:
-```html
-<!-- Antes -->
-<div class="img-placeholder" style="--c: #5A1070;"></div>
-
-<!-- Después -->
-<img src="img/sight-sound-poster.jpg" alt="SIGHT+SOUND poster">
-```
-
-Crea una carpeta `img/` y pon ahí tus archivos de imagen.
-
-## Cómo publicar en GitHub Pages
-
-1. Crea un repositorio en github.com
-2. Sube estos archivos:
-   ```bash
-   git init
-   git add .
-   git commit -m "primera versión"
-   git remote add origin https://github.com/TU-USUARIO/rua-studio.git
-   git push -u origin main
-   ```
-3. En GitHub → Settings → Pages → Source: "main branch"
-4. Tu sitio estará en `https://TU-USUARIO.github.io/rua-studio/`
-
-## Para ajustar el ancho de la columna izquierda
-
-En `style.css`, línea `--left-w: 380px;`, cambia el valor.
+**Contact:** [rua.studio](https://rua.studio)
