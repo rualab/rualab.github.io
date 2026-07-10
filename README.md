@@ -8,7 +8,7 @@
 
 ## About this project
 
-Built from scratch in **vanilla HTML / CSS / JS** — no frameworks, no build tools. Every interaction, shader, and transition is hand-written. The site doubles as the studio's portfolio and a piece of technical exploration: the landing runs a **GLSL caustics shader rendered in WebGL**, and the project navigation is inspired by the phi.ca menu pattern, rebuilt with `IntersectionObserver` to sync scroll position with panel switching.
+Built in **vanilla HTML / CSS / JS**, with a **GLSL caustics shader rendered in WebGL** on the landing and a flexible, scroll-driven navigation system built on `IntersectionObserver`. No frameworks, no build tools — every interaction, shader, and transition is hand-written.
 
 No external rendering dependencies — the shader, layout, and interactions all run on raw WebGL and JS.
 
@@ -39,6 +39,16 @@ rua-studio/
 ├── main.js      ← WebGL shader, interactions, keyboard navigation
 └── img/         ← visual assets for each project
 ```
+
+## Running it locally
+
+```bash
+cd rua-studio
+python3 -m http.server 8000
+# open http://localhost:8000
+```
+
+Or just open `index.html` in the browser — no install required.
 
 ## About Ruâ
 
