@@ -40,16 +40,6 @@ rua-studio/
 └── img/         ← visual assets for each project
 ```
 
-## Running it locally
-
-```bash
-cd rua-studio
-python3 -m http.server 8000
-# open http://localhost:8000
-```
-
-Or just open `index.html` in the browser — no install required.
-
 ## About Ruâ
 
 Ruâ is an independent art and design studio based in Mexico City, working at the intersection of graphic design, creative programming, and audiovisual art. The studio's work spans visual identity systems for cultural institutions and festivals, with clients including Eastern Bloc (Montréal), Universidad Veracruzana, Concordia University / Milieux Institute, and TOPO Montréal.
