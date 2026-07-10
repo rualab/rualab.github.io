@@ -20,9 +20,6 @@ A caustics-like light pattern generated in real time in the fragment shader, no 
 **Two-column, scroll-driven navigation**
 Fixed left column with a project index, right column with independent scroll. The active panel switch is triggered by `IntersectionObserver`, no external scroll libraries.
 
-**Zero build step**
-The entire site runs by opening `index.html` directly — zero config, zero npm dependencies for production.
-
 ## Stack
 
 - **WebGL + GLSL** — caustics shader on the landing
