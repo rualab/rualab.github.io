@@ -245,6 +245,14 @@ const PROJECTS = {
     tags: ['Identidad Visual', 'Desarrollo Web', 'Direcci\u00f3n de Arte'],
     hero: 'img/e_moodlemoot26.png', images: [],
     body: `<p>Identidad visual para el encuentro regional de la comunidad Moodle.</p>`
+  },
+    'metaritmos': {
+    title: 'Metaritmos 2026',
+    client: 'Metaritmos',
+    year: '2026', location: 'CDMX',
+    tags: ['Identidad Visual', 'Arte Generativo', 'Poster Design'],
+    hero: 'img/a_sight-plus-sound.png', images: [],
+    body: `<p>Identidad visual y sistema gr\u00e1fico para el ciclo Metaritmos 2026.</p>`
   }
 };
 
@@ -258,6 +266,7 @@ projectEntries.forEach(entry => {
       'milieux':        'projects/milieux-annual-report-20.html',
       'jazzuv-centro':  'projects/centro-de-estudios-de-jazz.html',
       'moodlemoot':     'projects/moodlemoot-cr-26.html',
+      'metaritmos':     'projects/metaritmos_26.html',
     };
     if (urls[entry.dataset.project]) window.location.href = urls[entry.dataset.project];
   });
