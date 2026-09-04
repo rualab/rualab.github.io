@@ -253,6 +253,14 @@ const PROJECTS = {
     tags: ['Identidad Visual', 'Arte Generativo', 'Poster Design'],
     hero: 'img/a_sight-plus-sound.png', images: [],
     body: `<p>Identidad visual y sistema gr\u00e1fico para el ciclo Metaritmos 2026.</p>`
+  },
+    'jid-25': {
+    title: 'Jazz Is Dead 2025',
+    client: 'Jazz Is Dead x Marcos Valle',
+    year: '2025', location: 'CDMX',
+    tags: ['Cartel', 'Ilustración', 'Identidad Visual'],
+    hero: 'img/g_marcos-valle.png', images: [],
+    body: `<p>Ilustración y diseño de cartel para Jazz Is Dead.</p>`
   }
 };
 
@@ -267,6 +275,7 @@ projectEntries.forEach(entry => {
       'jazzuv-centro':  'projects/centro-de-estudios-de-jazz.html',
       'moodlemoot':     'projects/moodlemoot-cr-26.html',
       'metaritmos':     'projects/metaritmos_26.html',
+      'jid_25':         'projects/jid_marcos-valle.html',
     };
     if (urls[entry.dataset.project]) window.location.href = urls[entry.dataset.project];
   });
