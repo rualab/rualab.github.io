@@ -60,6 +60,7 @@ let siteVisible = false;
 function enterSite() {
   if (siteVisible) return;
   siteVisible = true;
+  if (isMobile()) return; // en móvil el scroll normal ya hace todo el trabajo
   landing.classList.add('hidden');
   layout.classList.add('visible');
   setTimeout(() => { if (window.shaderPause) window.shaderPause(); }, 900);
@@ -67,10 +68,13 @@ function enterSite() {
 
 function returnToLanding() {
   siteVisible = false;
+  if (isMobile()) {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    return; // no tocar landing/layout ni el shader: nunca se apagaron
+  }
   layout.classList.remove('visible');
   landing.classList.remove('hidden');
-  if (!isMobile()) colLeft.scrollTo({ top: 0, behavior: 'instant' });
-  else window.scrollTo({ top: 0, behavior: 'instant' });
+  colLeft.scrollTo({ top: 0, behavior: 'instant' });
   if (window.shaderResume) window.shaderResume();
 }
 
