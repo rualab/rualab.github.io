@@ -178,11 +178,17 @@ if (!isMobile()) {
   document.addEventListener('mousemove', e => {
     cursor.style.left = `${e.clientX}px`;
     cursor.style.top  = `${e.clientY}px`;
-    const leftEdge = colLeft.getBoundingClientRect().right;
-    cursor.classList.toggle('expanded', siteVisible && e.clientX > leftEdge);
   });
   document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
   document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+
+  /* La manita (cursor expandido) solo aparece sobre la tarjeta
+     (.entry-content), nunca sobre el resto de .project-entry,
+     que ocupa toda la columna izquierda aunque sea transparente. */
+  document.querySelectorAll('.entry-content').forEach(card => {
+    card.addEventListener('mouseenter', () => cursor.classList.add('expanded'));
+    card.addEventListener('mouseleave', () => cursor.classList.remove('expanded'));
+  });
 } else {
   cursor.style.display = 'none';
 }
@@ -264,21 +270,41 @@ const PROJECTS = {
   }
 };
 
+/* ── URLS DE PROYECTOS (compartido entre tarjeta e imagen) ── */
+const PROJECT_URLS = {
+  'sight-sound':    'projects/sight-plus-sound.html',
+  'jazzuv-festival':'projects/festival-internacional-jazz-24.html',
+  'milieux':        'projects/milieux-annual-report-20.html',
+  'jazzuv-centro':  'projects/centro-de-estudios-de-jazz.html',
+  'moodlemoot':     'projects/moodlemoot-cr-26.html',
+  'metaritmos':     'projects/metaritmos_26.html',
+  'jid_25':         'projects/jid_marcos-valle.html',
+};
+
 /* ── CLICK EN TARJETA → PÁGINA ────────────────────────── */
 projectEntries.forEach(entry => {
   entry.addEventListener('click', () => {
     if (!entry.classList.contains('active') && !isMobile()) return;
-    const urls = {
-      'sight-sound':    'projects/sight-plus-sound.html',
-      'jazzuv-festival':'projects/festival-internacional-jazz-24.html',
-      'milieux':        'projects/milieux-annual-report-20.html',
-      'jazzuv-centro':  'projects/centro-de-estudios-de-jazz.html',
-      'moodlemoot':     'projects/moodlemoot-cr-26.html',
-      'metaritmos':     'projects/metaritmos_26.html',
-      'jid_25':         'projects/jid_marcos-valle.html',
-    };
-    if (urls[entry.dataset.project]) window.location.href = urls[entry.dataset.project];
+    if (PROJECT_URLS[entry.dataset.project]) {
+      window.location.href = PROJECT_URLS[entry.dataset.project];
+    }
   });
+});
+
+/* ── CLICK EN LA IMAGEN (panel activo) → MISMA PÁGINA ───
+   Escuchamos en col-right (delegación) para cubrir cualquier
+   click que caiga sobre el panel activo, su <img>, o el
+   espacio del contenedor. El panel activo ya es clickeable
+   (pointer-events: auto en .image-panel.active vía CSS). */
+colRight.addEventListener('click', (e) => {
+  const clickedPanel = e.target.closest('.image-panel');
+  const activePanel = clickedPanel && clickedPanel.classList.contains('active')
+    ? clickedPanel
+    : document.querySelector('.image-panel.active');
+  if (!activePanel) return;
+  const id = activePanel.dataset.panel;
+  if (id === 'about') return; // el panel "Estudio" no navega
+  if (PROJECT_URLS[id]) window.location.href = PROJECT_URLS[id];
 });
 
 /* ── HASH EN URL ──────────────────────────────────────── */
