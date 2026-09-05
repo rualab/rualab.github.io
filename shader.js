@@ -105,10 +105,9 @@ function resize() {
   if (gl) gl.viewport(0, 0, canvas.width, canvas.height);
 }
 
-/* Crea (o recrea) todo el estado de WebGL: programa, buffer, uniforms.
-   Se llama al inicio y de nuevo si el contexto se pierde y se recupera
-   (algo que iOS Safari puede hacer cuando el canvas pasa un rato
-   invisible / en pausa). */
+/* Crea (o recrea) todo el estado de WebGL. Se llama al inicio,
+   y de nuevo si el contexto se pierde y se recupera (iOS Safari
+   puede liberar el contexto de un canvas pausado/inactivo). */
 function initGL() {
   gl = canvas.getContext('webgl2');
   if (!gl) {
@@ -151,12 +150,9 @@ function render() {
   rafId = requestAnimationFrame(render);
 }
 
-/* ── PÉRDIDA / RECUPERACIÓN DE CONTEXTO WEBGL ─────────
-   Necesario porque iOS Safari puede liberar el contexto WebGL
-   de un canvas que estuvo oculto o sin renderizar por un rato
-   (para ahorrar memoria). Sin esto, al "recuperarlo" el canvas
-   se queda negro para siempre porque el programa/buffer viejos
-   ya no existen. */
+/* Pérdida / recuperación de contexto WebGL: sin esto, si iOS
+   libera el contexto mientras el canvas está pausado/oculto,
+   se queda negro para siempre al querer reanudarlo. */
 canvas.addEventListener('webglcontextlost', (e) => {
   e.preventDefault();
   running = false;

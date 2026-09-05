@@ -421,21 +421,6 @@ body.menu-open .grain-overlay { opacity: 1; }
     background-image: url('img/1-a_rua.png');
   }
 
-  /* En móvil NO apagamos #landing completo (eso apagaría también
-     el canvas del shader, que vive adentro y hereda la opacidad
-     del padre sin poder revertirla desde el hijo). Solo ocultamos
-     el logo y el botón "trabajo"; el shader queda siempre visible
-     de fondo detrás del contenido al scrollear. */
-  .landing.hidden {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: none;
-  }
-  .landing.hidden .landing-content,
-  .landing.hidden .landing-scroll {
-    opacity: 0;
-    visibility: hidden;
-  }
 
   /* about igual que las demás */
   .about-entry {
