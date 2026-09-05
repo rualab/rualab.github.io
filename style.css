@@ -334,22 +334,33 @@ body.menu-open .grain-overlay { opacity: 1; }
   button { cursor: auto; }
   a { cursor: auto; }
 
-  /* Landing fullscreen */
+  /* Landing fullscreen. overflow:hidden encierra el shader
+     dentro de esta sección — nunca puede escaparse a pantalla
+     completa ni tapar el resto del sitio. */
   .landing {
     position: relative;
+    overflow: hidden;
+    height: 100vh;   /* fallback si el navegador no soporta svh */
     height: 100svh;
     min-height: -webkit-fill-available;
     /* sin transition en móvil para que no deje negro */
     transition: none;
   }
 
-  /* El shader sigue corriendo detrás del contenido */
+  /* El shader queda confinado al tamaño real de #landing
+     (position: absolute, no fixed) para que no pueda cubrir
+     otras secciones si 100svh falla en algún navegador. */
   #shader-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: -1;
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0;
+  }
+  .landing-content,
+  .landing-scroll {
+    position: relative;
+    z-index: 2;
   }
 
   /* Layout sin fade, visible de inmediato */
@@ -420,7 +431,6 @@ body.menu-open .grain-overlay { opacity: 1; }
   .project-entry[data-project="about"]::before {
     background-image: url('img/1-a_rua.png');
   }
-
 
   /* about igual que las demás */
   .about-entry {
