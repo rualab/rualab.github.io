@@ -411,8 +411,30 @@ body.menu-open .grain-overlay { opacity: 1; }
   .project-entry[data-project="moodlemoot"]::before {
     background-image: url('img/e_moodlemoot26.png');
   }
+  .project-entry[data-project="metaritmos"]::before {
+    background-image: url('img/f_metaritmos26.png');
+  }
+  .project-entry[data-project="jid_25"]::before {
+    background-image: url('img/g_marcos-valle.png');
+  }
   .project-entry[data-project="about"]::before {
     background-image: url('img/1-a_rua.png');
+  }
+
+  /* En móvil NO apagamos #landing completo (eso apagaría también
+     el canvas del shader, que vive adentro y hereda la opacidad
+     del padre sin poder revertirla desde el hijo). Solo ocultamos
+     el logo y el botón "trabajo"; el shader queda siempre visible
+     de fondo detrás del contenido al scrollear. */
+  .landing.hidden {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: none;
+  }
+  .landing.hidden .landing-content,
+  .landing.hidden .landing-scroll {
+    opacity: 0;
+    visibility: hidden;
   }
 
   /* about igual que las demás */

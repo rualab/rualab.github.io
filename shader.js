@@ -1,11 +1,5 @@
 /* shader.js — WebGL2 fragment shader en canvas fullscreen */
-
 const canvas = document.getElementById('shader-canvas');
-const gl = canvas.getContext('webgl2');
-
-if (!gl) {
-  canvas.style.background = '#2A0A1A';
-}
 
 const VERT = `#version 300 es
 in vec2 a_position;
@@ -14,31 +8,26 @@ void main() {
   vUV = a_position * 0.5 + 0.5;
   gl_Position = vec4(a_position, 0.0, 1.0);
 }`;
-
 const FRAG = `#version 300 es
 precision highp float;
 in vec2 vUV;
 out vec4 fragColor;
 uniform float time;
 uniform vec2 resolution;
-
 #define SPEED 0.53
 #define COMPLEXITY 4.0
 #define DISTORTION 0.17
 #define SCALE 1.0
 #define BRIGHTNESS 1.0
 #define CONTRAST 1.0
-
 vec3 COLOR_BASE = vec3(0.54, 0.27, 0.07);
 vec3 COLOR_MID  = vec3(1.4, 0.420, 0.616);
 vec3 COLOR_HIGH = vec3(0.23, 0.47, 0.54);
-
 float hash(vec2 p) {
   p = fract(p * vec2(0.33, 0.33));
   p += dot(p, p + 30.33);
   return fract(p.x * p.y);
 }
-
 float noise(vec2 p) {
   vec2 i = floor(p);
   vec2 f = fract(p);
@@ -49,7 +38,6 @@ float noise(vec2 p) {
   float d = hash(i + vec2(1.0, 1.0));
   return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
 }
-
 float fbm(vec2 p) {
   float value = 2.0;
   float amplitude = 1.3;
@@ -61,7 +49,6 @@ float fbm(vec2 p) {
   }
   return value;
 }
-
 float caustic(vec2 uv, float t) {
   vec2 p = uv * SCALE;
   p.x += fbm(p + t * 0.008) * DISTORTION;
@@ -80,7 +67,6 @@ float caustic(vec2 uv, float t) {
   }
   return c / COMPLEXITY;
 }
-
 void main() {
   vec2 uv = (vUV - 0.5) * resolution / min(resolution.x, resolution.y);
   float t = time * SPEED;
@@ -97,6 +83,11 @@ void main() {
   fragColor = vec4(col, 1.0);
 }`;
 
+let gl, prog, buf, posLoc, timeLoc, resLoc;
+let running = true;
+let t0 = performance.now();
+let rafId = null;
+
 function compileShader(type, src) {
   const s = gl.createShader(type);
   gl.shaderSource(s, src);
@@ -108,44 +99,89 @@ function compileShader(type, src) {
   return s;
 }
 
-const prog = gl.createProgram();
-gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, VERT));
-gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, FRAG));
-gl.linkProgram(prog);
-
-const buf = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-  -1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1
-]), gl.STATIC_DRAW);
-
-const posLoc = gl.getAttribLocation(prog, 'a_position');
-gl.enableVertexAttribArray(posLoc);
-gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
-const timeLoc = gl.getUniformLocation(prog, 'time');
-const resLoc  = gl.getUniformLocation(prog, 'resolution');
-
 function resize() {
   canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
-  gl.viewport(0, 0, canvas.width, canvas.height);
+  if (gl) gl.viewport(0, 0, canvas.width, canvas.height);
 }
-resize();
-window.addEventListener('resize', resize);
 
-let running = true;
-const t0 = performance.now();
+/* Crea (o recrea) todo el estado de WebGL: programa, buffer, uniforms.
+   Se llama al inicio y de nuevo si el contexto se pierde y se recupera
+   (algo que iOS Safari puede hacer cuando el canvas pasa un rato
+   invisible / en pausa). */
+function initGL() {
+  gl = canvas.getContext('webgl2');
+  if (!gl) {
+    canvas.style.background = '#2A0A1A';
+    return false;
+  }
+
+  prog = gl.createProgram();
+  gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, VERT));
+  gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, FRAG));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error(gl.getProgramInfoLog(prog));
+    return false;
+  }
+
+  buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1
+  ]), gl.STATIC_DRAW);
+
+  posLoc = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(posLoc);
+  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+  timeLoc = gl.getUniformLocation(prog, 'time');
+  resLoc  = gl.getUniformLocation(prog, 'resolution');
+
+  resize();
+  return true;
+}
 
 function render() {
-  if (!running) return;
+  if (!running || !gl) return;
   gl.useProgram(prog);
   gl.uniform1f(timeLoc, (performance.now() - t0) / 1000);
   gl.uniform2f(resLoc, canvas.width, canvas.height);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
-  requestAnimationFrame(render);
+  rafId = requestAnimationFrame(render);
 }
+
+/* ── PÉRDIDA / RECUPERACIÓN DE CONTEXTO WEBGL ─────────
+   Necesario porque iOS Safari puede liberar el contexto WebGL
+   de un canvas que estuvo oculto o sin renderizar por un rato
+   (para ahorrar memoria). Sin esto, al "recuperarlo" el canvas
+   se queda negro para siempre porque el programa/buffer viejos
+   ya no existen. */
+canvas.addEventListener('webglcontextlost', (e) => {
+  e.preventDefault();
+  running = false;
+  if (rafId) cancelAnimationFrame(rafId);
+}, false);
+
+canvas.addEventListener('webglcontextrestored', () => {
+  if (initGL()) {
+    t0 = performance.now();
+    running = true;
+    render();
+  }
+}, false);
+
+initGL();
+window.addEventListener('resize', resize);
 render();
 
-window.shaderPause  = () => { running = false; };
-window.shaderResume = () => { if (!running) { running = true; render(); } };
+window.shaderPause  = () => {
+  running = false;
+  if (rafId) cancelAnimationFrame(rafId);
+};
+window.shaderResume = () => {
+  if (!running) {
+    running = true;
+    render();
+  }
+};
